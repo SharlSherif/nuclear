@@ -3,33 +3,37 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as ScrobblingActions from '../../actions/scrobbling';
 import * as SettingsActions from '../../actions/settings';
+import * as LocalActions from '../../actions/local';
 import options from '../../constants/settings';
 
 import Settings from '../../components/Settings';
 
-class SettingsContainer extends React.Component {
-  render() {
-    return (
-      <Settings
-        actions={this.props.actions}
-        scrobbling={this.props.scrobbling}
-        settings={this.props.settings}
-        options={options}
-      />
-    );
-  }
-}
+const SettingsContainer = ({
+  actions,
+  scrobbling,
+  settings,
+  local
+}) => (
+  <Settings
+    actions={actions}
+    scrobbling={scrobbling}
+    settings={settings}
+    options={options}
+    localFolders={local.folders}
+  />
+);
 
 function mapStateToProps(state) {
   return {
     scrobbling: state.scrobbling,
+    local: state.local,
     settings: state.settings
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return {
-    actions: bindActionCreators(Object.assign({}, ScrobblingActions, SettingsActions), dispatch)
+    actions: bindActionCreators(Object.assign({}, ScrobblingActions, SettingsActions, LocalActions), dispatch)
   };
 }
 

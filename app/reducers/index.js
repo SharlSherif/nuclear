@@ -13,6 +13,7 @@ import ToastsReducer from './toasts';
 import LyricsReducer from './lyrics';
 import FavoritesReducer from './favorites';
 import EqualizerReducer from './equalizer';
+import LocalReducer from './local';
 
 const rootReducer = combineReducers({
   search: SearchReducer,
@@ -27,7 +28,8 @@ const rootReducer = combineReducers({
   toasts: ToastsReducer,
   lyrics: LyricsReducer,
   favorites: FavoritesReducer,
-  equalizer: EqualizerReducer
+  equalizer: EqualizerReducer,
+  local: LocalReducer
 });
 
 export default rootReducer;

@@ -10,7 +10,6 @@ ipcMain.on('started', event => {
   rendererWindow = event.sender;
 });
 
-
 function onNext() {
   rendererWindow.send('next');
 }
