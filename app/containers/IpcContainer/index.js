@@ -8,6 +8,7 @@ import * as QueueActions from '../../actions/queue';
 import * as SettingsActions from '../../actions/settings';
 import * as PlaylistActions from '../../actions/playlists';
 import * as EqualizerActions from '../../actions/equalizer';
+import * as LocalFileActions from '../../actions/local';
 
 import {
   onNext,
@@ -27,29 +28,33 @@ import {
   onCreatePlaylist,
   onRefreshPlaylists,
   onUpdateEqualizer,
-  onSetEqualizer
+  onSetEqualizer,
+  onLocalFiles,
+  onLocalFilesError
 } from '../../mpris';
 
 class IpcContainer extends React.Component {
   componentDidMount() {
     ipcRenderer.send('started');
-    ipcRenderer.on('next', event => onNext(event, this.props.actions));
-    ipcRenderer.on('previous', event => onPrevious(event, this.props.actions));
-    ipcRenderer.on('pause', event => onPause(event, this.props.actions));
-    ipcRenderer.on('playpause', event => onPlayPause(event, this.props.actions, this.props.player));
-    ipcRenderer.on('stop', event => onStop(event, this.props.actions));
-    ipcRenderer.on('play', event => onPlay(event, this.props.actions));
-    ipcRenderer.on('settings', (event, data) => onSettings(event, data, this.props.actions));
-    ipcRenderer.on('mute', event => onMute(event, this.props.actions, this.props.player));
-    ipcRenderer.on('volume', (event, data) => onVolume(event, data, this.props.actions));
-    ipcRenderer.on('seek', (event, data) => onSeek(event, data, this.props.actions));
-    ipcRenderer.on('playing-status', event => sendPlayingStatus(event, this.props.player, this.props.queue));
-    ipcRenderer.on('empty-queue', event => onEmptyQueue(event, this.props.actions));
-    ipcRenderer.on('queue', event => sendQueueItems(event, this.props.queue.queueItems));
-    ipcRenderer.on('create-playlist', (event, name) => onCreatePlaylist(event, { name, tracks: this.props.queue.queueItems }, this.props.actions));
-    ipcRenderer.on('refresh-playlists', (event) => onRefreshPlaylists(event, this.props.actions));
-    ipcRenderer.on('update-equalizer', (event, data) =>  onUpdateEqualizer(event, this.props.actions, data));
-    ipcRenderer.on('set-equalizer', (event, data) => onSetEqualizer(event, this.props.actions, data));
+    ipcRenderer.on('next', event => onNext(event, this.props.actions))
+      .on('previous', event => onPrevious(event, this.props.actions))
+      .on('pause', event => onPause(event, this.props.actions))
+      .on('playpause', event => onPlayPause(event, this.props.actions, this.props.player))
+      .on('stop', event => onStop(event, this.props.actions))
+      .on('play', event => onPlay(event, this.props.actions))
+      .on('settings', (event, data) => onSettings(event, data, this.props.actions))
+      .on('mute', event => onMute(event, this.props.actions, this.props.player))
+      .on('volume', (event, data) => onVolume(event, data, this.props.actions))
+      .on('seek', (event, data) => onSeek(event, data, this.props.actions))
+      .on('playing-status', event => sendPlayingStatus(event, this.props.player, this.props.queue))
+      .on('empty-queue', event => onEmptyQueue(event, this.props.actions))
+      .on('queue', event => sendQueueItems(event, this.props.queue.queueItems))
+      .on('create-playlist', (event, name) => onCreatePlaylist(event, { name, tracks: this.props.queue.queueItems }, this.props.actions))
+      .on('refresh-playlists', (event) => onRefreshPlaylists(event, this.props.actions))
+      .on('update-equalizer', (event, data) =>  onUpdateEqualizer(event, this.props.actions, data))
+      .on('set-equalizer', (event, data) => onSetEqualizer(event, this.props.actions, data))
+      .on('local-files', (event, data) => onLocalFiles(event, this.props.actions, data))
+      .on('local-files-error', (event, err) => onLocalFilesError(event, this.props.actions, err));
   }
 
   componentWillReceiveProps(nextProps){
@@ -80,7 +85,8 @@ function mapDispatchToProps(dispatch) {
         QueueActions,
         SettingsActions,
         PlaylistActions,
-        EqualizerActions
+        EqualizerActions,
+        LocalFileActions
       ),
       dispatch
     )
